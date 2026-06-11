@@ -100,7 +100,7 @@ function card(item, s) {
   return `<div class="news-card">
     <div class="icon ${s.iconCls}">${s.icon}</div>
     <div class="nbody">
-      <div class="ntitle">${item.title}</div>
+      <div class="ntitle">${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid #ccc;">${item.title}</a>` : item.title}</div>
       <div class="ndesc">${item.summary}</div>
       <div class="nfoot">
         <span class="nsrc">${item.source} ／ ${item.date}</span>
