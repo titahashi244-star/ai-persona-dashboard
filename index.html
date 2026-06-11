@@ -79,6 +79,11 @@
     .trend-banner { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; padding: 12px 32px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
     .trend-banner strong { color: #f5a623; margin-right: 4px; }
 
+    .quote-bar { background: rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 10px 32px; display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #2a1a3e, #4a2d6b); }
+    .quote-robot { font-size: 22px; flex-shrink: 0; }
+    .quote-bubble { position: relative; background: rgba(255,255,255,0.15); border-radius: 16px; border-top-left-radius: 4px; padding: 8px 16px; color: white; font-size: 13px; font-style: italic; line-height: 1.5; backdrop-filter: blur(4px); }
+    .quote-bubble::before { content: ''; position: absolute; left: -8px; top: 10px; border-width: 5px 8px 5px 0; border-style: solid; border-color: transparent rgba(255,255,255,0.15) transparent transparent; }
+
     footer { text-align: center; padding: 24px; font-size: 12px; color: #bbb; }
 
     @media (max-width: 640px) {
@@ -124,6 +129,10 @@
     </div>
   </div>
 </header>
+<div class="quote-bar" id="quote-bar" style="display:none">
+  <div class="quote-robot">🤖</div>
+  <div class="quote-bubble" id="quote-text"></div>
+</div>
 <div class="trend-banner" id="trend-banner" style="display:none">
   <span>📈</span><span id="trend-text"></span>
 </div>
@@ -256,6 +265,11 @@ function card(item, s) {
 
 function render(data) {
   document.getElementById('updated-at').textContent = '最終更新: ' + data.updated_at;
+  const quoteBar = document.getElementById('quote-bar');
+  if (data.quote) {
+    document.getElementById('quote-text').textContent = '「' + data.quote + '」';
+    quoteBar.style.display = 'flex';
+  }
   const trendBanner = document.getElementById('trend-banner');
   if (data.trend_summary) {
     document.getElementById('trend-text').innerHTML = '<strong>今週のトレンド：</strong>' + data.trend_summary;
