@@ -121,12 +121,21 @@ function isNew(dateStr) {
   return diff <= 3;
 }
 
+function stars(score) {
+  if (!score) return '';
+  const filled = '★'.repeat(score);
+  const empty = '☆'.repeat(3 - score);
+  const color = score === 3 ? '#e94560' : score === 2 ? '#f5a623' : '#aaa';
+  return `<span style="color:${color};font-size:13px;margin-left:6px;vertical-align:middle;">${filled}${empty}</span>`;
+}
+
 function card(item, s) {
   const newBadge = isNew(item.date) ? '<span style="background:#e94560;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:8px;vertical-align:middle;">NEW</span>' : '';
-  return `<div class="news-card">
+  const highlight = item.score === 3 ? 'border-left:3px solid #e94560;' : '';
+  return `<div class="news-card" style="${highlight}">
     <div class="icon ${s.iconCls}">${s.icon}</div>
     <div class="nbody">
-      <div class="ntitle">${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid #ccc;">${item.title}</a>` : item.title}${newBadge}</div>
+      <div class="ntitle">${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid #ccc;">${item.title}</a>` : item.title}${stars(item.score)}${newBadge}</div>
       <div class="ndesc">${item.summary}</div>
       <div class="nfoot">
         <span class="nsrc">${item.source} ／ ${item.date}</span>
