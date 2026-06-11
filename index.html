@@ -88,10 +88,13 @@
     footer { text-align: center; padding: 24px; font-size: 12px; color: #bbb; }
 
     @media (max-width: 640px) {
-      header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
+      header { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
       .header-date { font-size: 20px; }
       header h1 { font-size: 16px; }
-      .header-right { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; }
+      .header-center { order: 3; width: 100%; justify-content: flex-start; gap: 10px; }
+      .header-quote-bubble { font-size: 12px; flex: 1; }
+      .header-quote-robot { font-size: 30px; }
+      .header-right { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; order: 2; }
       .weather-temp { font-size: 18px; }
       .weather-icon { font-size: 22px; }
       .container { padding: 16px 12px; }
