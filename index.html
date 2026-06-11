@@ -11,15 +11,20 @@
     header {
       background: var(--header-bg, linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%));
       color: white; padding: 24px 32px;
-      display: flex; align-items: center; justify-content: space-between;
+      display: grid; grid-template-columns: minmax(180px, auto) 1fr minmax(160px, auto);
+      align-items: center; gap: 20px;
       transition: background 0.5s;
     }
-    .header-left { display: flex; flex-direction: column; gap: 4px; }
-    .header-title-row { display: flex; align-items: center; gap: 10px; }
-    header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.05em; }
+    .header-left { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .header-title-row { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+    header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.05em; white-space: nowrap; }
     .header-date { font-size: 28px; font-weight: 800; letter-spacing: 0.03em; opacity: 0.95; margin-top: 2px; }
     .header-day { font-size: 12px; opacity: 0.6; margin-top: 1px; }
     .meta { font-size: 12px; opacity: 0.6; margin-top: 2px; }
+    .header-center { display: flex; align-items: center; justify-content: center; gap: 14px; }
+    .header-quote-robot { font-size: 42px; line-height: 1; flex-shrink: 0; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
+    .header-quote-bubble { position: relative; background: rgba(255,255,255,0.13); border-radius: 16px; border-bottom-left-radius: 4px; padding: 10px 16px; color: white; font-size: 13px; font-style: italic; line-height: 1.6; backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.22); width: 100%; }
+    .header-quote-bubble::before { content: ''; position: absolute; left: -8px; bottom: 10px; border-width: 5px 8px 5px 0; border-style: solid; border-color: transparent rgba(255,255,255,0.13) transparent transparent; }
     .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .badge { background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; backdrop-filter: blur(4px); }
     .weather-box { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); border-radius: 16px; padding: 8px 16px; backdrop-filter: blur(4px); }
@@ -79,10 +84,6 @@
     .trend-banner { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; padding: 12px 32px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
     .trend-banner strong { color: #f5a623; margin-right: 4px; }
 
-    .quote-bar { background: rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 10px 32px; display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #2a1a3e, #4a2d6b); }
-    .quote-robot { font-size: 22px; flex-shrink: 0; }
-    .quote-bubble { position: relative; background: rgba(255,255,255,0.15); border-radius: 16px; border-top-left-radius: 4px; padding: 8px 16px; color: white; font-size: 13px; font-style: italic; line-height: 1.5; backdrop-filter: blur(4px); }
-    .quote-bubble::before { content: ''; position: absolute; left: -8px; top: 10px; border-width: 5px 8px 5px 0; border-style: solid; border-color: transparent rgba(255,255,255,0.15) transparent transparent; }
 
     footer { text-align: center; padding: 24px; font-size: 12px; color: #bbb; }
 
@@ -118,6 +119,10 @@
     <div class="header-day" id="header-day"></div>
     <div class="meta" id="updated-at">読み込み中...</div>
   </div>
+  <div class="header-center" id="header-quote-row" style="visibility:hidden">
+    <div class="header-quote-bubble" id="quote-text"></div>
+    <div class="header-quote-robot">🤖</div>
+  </div>
   <div class="header-right">
     <span class="badge">毎朝 8:00 自動更新</span>
     <div class="weather-box" id="weather-box" style="display:none">
@@ -129,10 +134,6 @@
     </div>
   </div>
 </header>
-<div class="quote-bar" id="quote-bar" style="display:none">
-  <div class="quote-robot">🤖</div>
-  <div class="quote-bubble" id="quote-text"></div>
-</div>
 <div class="trend-banner" id="trend-banner" style="display:none">
   <span>📈</span><span id="trend-text"></span>
 </div>
@@ -176,7 +177,7 @@ const MONTH_THEMES = {
   3:  { icon: '🌸', bg: 'linear-gradient(135deg, #1a2d1a 0%, #3d7a4a 60%, #88d9a0 100%)', label: '弥生' },
   4:  { icon: '🌷', bg: 'linear-gradient(135deg, #2d1a2d 0%, #7a3d6e 60%, #d988c8 100%)', label: '卯月' },
   5:  { icon: '🌿', bg: 'linear-gradient(135deg, #1a2d1a 0%, #2d6b3d 60%, #5db870 100%)', label: '皐月' },
-  6:  { icon: '🤖', bg: 'linear-gradient(135deg, #2a1a3e 0%, #4a2d6b 60%, #7b5ea8 100%)', label: '水無月' },
+  6:  { icon: '📡', bg: 'linear-gradient(135deg, #2a1a3e 0%, #4a2d6b 60%, #7b5ea8 100%)', label: '水無月' },
   7:  { icon: '🌻', bg: 'linear-gradient(135deg, #2d2000 0%, #7a5500 60%, #e8a800 100%)', label: '文月' },
   8:  { icon: '🌊', bg: 'linear-gradient(135deg, #001a2d 0%, #004a7a 60%, #0088d9 100%)', label: '葉月' },
   9:  { icon: '🍂', bg: 'linear-gradient(135deg, #2d1a00 0%, #7a4400 60%, #d98800 100%)', label: '長月' },
@@ -265,10 +266,10 @@ function card(item, s) {
 
 function render(data) {
   document.getElementById('updated-at').textContent = '最終更新: ' + data.updated_at;
-  const quoteBar = document.getElementById('quote-bar');
+  const quoteRow = document.getElementById('header-quote-row');
   if (data.quote) {
     document.getElementById('quote-text').textContent = '「' + data.quote + '」';
-    quoteBar.style.display = 'flex';
+    quoteRow.style.visibility = 'visible';
   }
   const trendBanner = document.getElementById('trend-banner');
   if (data.trend_summary) {
