@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIペルソナ 業界動向ダッシュボード</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      color: white; padding: 20px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.05em; }
+    .meta { font-size: 13px; opacity: 0.7; margin-top: 4px; }
+    .badge { background: #e94560; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+    .summary-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-left: 4px solid; }
+    .summary-card.c1 { border-color: #e94560; }
+    .summary-card.c2 { border-color: #0f3460; }
+    .summary-card.c3 { border-color: #533483; }
+    .count { font-size: 36px; font-weight: 700; }
+    .c1 .count { color: #e94560; }
+    .c2 .count { color: #0f3460; }
+    .c3 .count { color: #533483; }
+    .clabel { font-size: 13px; color: #888; margin-top: 2px; }
+
+    .section { margin-bottom: 28px; }
+    .sec-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .sec-header h2 { font-size: 16px; font-weight: 700; }
+    .stag { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; color: white; }
+    .stag.t1 { background: #e94560; }
+    .stag.t2 { background: #0f3460; }
+    .stag.t3 { background: #533483; }
+
+    .news-list { display: flex; flex-direction: column; gap: 12px; }
+    .news-card { background: white; border-radius: 10px; padding: 16px 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display: flex; gap: 16px; align-items: flex-start; }
+    .icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .i1 { background: #fff0f3; }
+    .i2 { background: #eef2ff; }
+    .i3 { background: #f5f0ff; }
+    .nbody { flex: 1; }
+    .ntitle { font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 4px; }
+    .ndesc  { font-size: 12px; color: #666; line-height: 1.6; }
+    .nfoot  { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .nsrc   { font-size: 11px; color: #aaa; }
+    .pill   { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .p1 { background: #fff0f3; color: #e94560; }
+    .p2 { background: #eef2ff; color: #0f3460; }
+    .p3 { background: #f5f0ff; color: #533483; }
+    .empty { color: #bbb; font-size: 13px; padding: 16px; }
+
+    footer { text-align: center; padding: 24px; font-size: 12px; color: #bbb; }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🤖 AIペルソナ 業界動向ダッシュボード</h1>
+    <div class="meta" id="updated-at">読み込み中...</div>
+  </div>
+  <span class="badge">毎朝 8:00 自動更新</span>
+</header>
+
+<div class="container">
+  <div class="summary-grid">
+    <div class="summary-card c1"><div class="count" id="cnt1">-</div><div class="clabel">📢 競合動向（AIペルソナ関連全域）</div></div>
+    <div class="summary-card c2"><div class="count" id="cnt2">-</div><div class="clabel">🏢 潜在顧客動向（全業界 DX・マーケ）</div></div>
+    <div class="summary-card c3"><div class="count" id="cnt3">-</div><div class="clabel">📋 導入事例・プレスリリース</div></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-header"><h2>📢 競合動向</h2><span class="stag t1">AIペルソナ関連全域</span></div>
+    <div class="news-list" id="list1"></div>
+  </div>
+  <div class="section">
+    <div class="sec-header"><h2>🏢 潜在顧客動向</h2><span class="stag t2">全業界 DX・マーケ・顧客体験</span></div>
+    <div class="news-list" id="list2"></div>
+  </div>
+  <div class="section">
+    <div class="sec-header"><h2>📋 導入事例・プレスリリース</h2><span class="stag t3">AIペルソナ関連</span></div>
+    <div class="news-list" id="list3"></div>
+  </div>
+</div>
+<footer>DNP AIペルソナ営業企画 情報収集ダッシュボード — 毎朝 08:00 JST 自動更新</footer>
+
+<script>
+const SECTIONS = [
+  { id: '1', icon: '📢', iconCls: 'i1', pillCls: 'p1' },
+  { id: '2', icon: '🏢', iconCls: 'i2', pillCls: 'p2' },
+  { id: '3', icon: '📋', iconCls: 'i3', pillCls: 'p3' }
+];
+
+function card(item, s) {
+  return `<div class="news-card">
+    <div class="icon ${s.iconCls}">${s.icon}</div>
+    <div class="nbody">
+      <div class="ntitle">${item.title}</div>
+      <div class="ndesc">${item.summary}</div>
+      <div class="nfoot">
+        <span class="nsrc">${item.source} ／ ${item.date}</span>
+        <span class="pill ${s.pillCls}">${item.tag}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(data) {
+  document.getElementById('updated-at').textContent = '最終更新: ' + data.updated_at;
+  const keys = ['competitor', 'customer', 'casestudy'];
+  keys.forEach((key, i) => {
+    const items = data[key] || [];
+    const s = SECTIONS[i];
+    document.getElementById('cnt' + s.id).textContent = items.length;
+    document.getElementById('list' + s.id).innerHTML = items.length
+      ? items.map(item => card(item, s)).join('')
+      : '<div class="empty">本日は該当情報がありません</div>';
+  });
+}
+
+const SAMPLE = {
+  updated_at: "2026/06/11 08:00（サンプルデータ）",
+  competitor: [
+    { title: "電通、生成AI活用のデジタルヒューマン広告サービスを発表", summary: "電通グループは生成AIを活用した仮想インフルエンサー制作・運用サービスを国内主要ブランド向けに提供開始。広告効果の計測機能も統合。", source: "日経クロストレンド", date: "2026/06/11", tag: "新サービス" },
+    { title: "博報堂DYホールディングス、AIペルソナ技術スタートアップに出資", summary: "博報堂DYHDは感情表現型AIアバター技術を持つスタートアップへの戦略投資を発表。顧客コミュニケーション領域での活用を検討。", source: "AdverTimes", date: "2026/06/10", tag: "投資・M&A" }
+  ],
+  customer: [
+    { title: "花王、AIを活用したパーソナライズドマーケティング強化を発表", summary: "花王はEコマース向けにAIレコメンド技術を導入し、顧客一人ひとりに最適な商品提案を行う新マーケティング基盤を構築すると発表。", source: "日経MJ", date: "2026/06/11", tag: "DX施策" },
+    { title: "P&Gジャパン、デジタルチャネル投資を前年比30%増へ", summary: "P&Gジャパンは2026年度のデジタルマーケティング予算を大幅増強。SNS・動画広告とAIコンテンツ生成への投資を重点化する方針。", source: "Marketing Week Japan", date: "2026/06/09", tag: "予算増強" },
+    { title: "資生堂、バーチャルビューティーアドバイザー導入を国内展開", summary: "資生堂はECサイトにAIキャラクターによるスキンケア提案機能を実装。メイクアップシミュレーションとの連携でコンバージョン率向上を狙う。", source: "WWD Japan", date: "2026/06/08", tag: "AI導入" }
+  ],
+  casestudy: [
+    { title: "大日本印刷、AIペルソナソリューション新機能追加を発表", summary: "DNPは感情認識・多言語対応機能を追加した最新バージョンをリリース。小売・金融・医療向けテンプレートも提供開始。", source: "DNP公式", date: "2026/06/11", tag: "自社情報" },
+    { title: "ユニリーバジャパン×AIスタートアップ、AIブランドアンバサダー実証実験", summary: "ユニリーバジャパンがAIペルソナを活用したSNSブランドアンバサダーの実証実験を開始。6ヶ月間でエンゲージメント率への影響を検証。", source: "ITmedia マーケティング", date: "2026/06/07", tag: "導入事例" }
+  ]
+};
+
+fetch('data.json?t=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const total = (data.competitor||[]).length + (data.customer||[]).length + (data.casestudy||[]).length;
+    render(total > 0 ? data : SAMPLE);
+  })
+  .catch(() => render(SAMPLE));
+</script>
+</body>
+</html>
