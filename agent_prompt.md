@@ -32,32 +32,33 @@ DNP（大日本印刷）のAIペルソナサービス営業企画担当向けに
 2. 各カテゴリから最も重要なニュースを3〜5件選定
 3. 各ニュースを以下フォーマットで整理：
    - title: 記事タイトル（簡潔に）
-   - url: 記事のURL（必ず実在するURLを入れる。不明な場合は空文字）
+   - url: 記事のURL（WebSearchで取得したURLをそのまま入れること。必須項目。URLが取得できない場合のみ空文字）
    - summary: 要約（2〜3文、営業企画視点で重要ポイントを含む）
    - source: 媒体名
    - date: 日付（YYYY/MM/DD）
    - tag: ラベル（例：新サービス、導入事例、DX施策、投資・M&A など）
-4. 下記HTMLメールテンプレートに埋め込む
-5. Resend APIでt.itahashi244@gmail.comに送信
 
-## メール送信コマンド（Resend API）
+**重要：urlフィールドは必ずWebSearchの検索結果から取得した実際のURLを入れること。架空のURLは絶対に入れないこと。**
+4. 各カテゴリのニュース群を読み、「DNPペルソナインサイトへの示唆」を生成する：
+   - competitor_insight: 競合動向から読み取れる市場トレンドと、ペルソナインサイトが差別化できるポイント（3〜4文）
+   - customer_insight: 潜在顧客動向から読み取れるニーズと、アプローチすべき業界・タイミング（3〜4文）
+   - casestudy_insight: 導入事例から読み取れる成功パターンと、営業トークへの活かし方（3〜4文）
+5. 下記JSONフォーマットにまとめてdata.jsonを作成する
+6. GitHubリポジトリにpushする
 
-```bash
-curl -X POST https://api.resend.com/emails \
-  -H "Authorization: Bearer RESEND_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "from": "dashboard@resend.dev",
-    "to": "t.itahashi244@gmail.com",
-    "subject": "【AIペルソナ動向】YYYY/MM/DD",
-    "html": "HTML_CONTENT_HERE"
-  }'
+## data.jsonフォーマット
+
+```json
+{
+  "updated_at": "YYYY/MM/DD HH:MM",
+  "competitor": [...],
+  "competitor_insight": "競合動向の示唆テキスト（3〜4文）",
+  "customer": [...],
+  "customer_insight": "潜在顧客動向の示唆テキスト（3〜4文）",
+  "casestudy": [...],
+  "casestudy_insight": "導入事例の示唆テキスト（3〜4文）"
+}
 ```
-
-## HTMLメールテンプレート
-
-下記のindex.htmlをベースに、収集したデータをインライン化したHTMLを生成する。
-CSSはすべてinlineスタイルに変換すること（メールクライアント対応）。
 
 ## 注意事項
 - 日本語情報のみ収集（英語は除外）

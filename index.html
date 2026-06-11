@@ -55,6 +55,16 @@
     .p3 { background: #f5f0ff; color: #533483; }
     .empty { color: #bbb; font-size: 13px; padding: 16px; }
 
+    .insight-box { border-radius: 10px; padding: 16px 20px; margin-top: 14px; display: flex; gap: 12px; align-items: flex-start; }
+    .insight-box.ib1 { background: #fff8f0; border-left: 4px solid #e94560; }
+    .insight-box.ib2 { background: #f0f4ff; border-left: 4px solid #0f3460; }
+    .insight-box.ib3 { background: #f8f0ff; border-left: 4px solid #533483; }
+    .insight-label { font-size: 11px; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.05em; }
+    .ib1 .insight-label { color: #e94560; }
+    .ib2 .insight-label { color: #0f3460; }
+    .ib3 .insight-label { color: #533483; }
+    .insight-text { font-size: 13px; color: #444; line-height: 1.7; }
+
     footer { text-align: center; padding: 24px; font-size: 12px; color: #bbb; }
   </style>
 </head>
@@ -77,14 +87,23 @@
   <div class="section">
     <div class="sec-header"><h2>📢 競合動向</h2><span class="stag t1">AIペルソナ関連全域</span></div>
     <div class="news-list" id="list1"></div>
+    <div class="insight-box ib1" id="insight1" style="display:none">
+      <div style="flex:1"><div class="insight-label">📌 ペルソナインサイトへの示唆</div><div class="insight-text" id="insight1-text"></div></div>
+    </div>
   </div>
   <div class="section">
     <div class="sec-header"><h2>🏢 潜在顧客動向</h2><span class="stag t2">全業界 DX・マーケ・顧客体験</span></div>
     <div class="news-list" id="list2"></div>
+    <div class="insight-box ib2" id="insight2" style="display:none">
+      <div style="flex:1"><div class="insight-label">📌 ペルソナインサイトへの示唆</div><div class="insight-text" id="insight2-text"></div></div>
+    </div>
   </div>
   <div class="section">
     <div class="sec-header"><h2>📋 導入事例・プレスリリース</h2><span class="stag t3">AIペルソナ関連</span></div>
     <div class="news-list" id="list3"></div>
+    <div class="insight-box ib3" id="insight3" style="display:none">
+      <div style="flex:1"><div class="insight-label">📌 ペルソナインサイトへの示唆</div><div class="insight-text" id="insight3-text"></div></div>
+    </div>
   </div>
 </div>
 <footer>AIペルソナ 業界動向ダッシュボード — 毎朝 08:00 JST 自動更新</footer>
@@ -113,6 +132,7 @@ function card(item, s) {
 function render(data) {
   document.getElementById('updated-at').textContent = '最終更新: ' + data.updated_at;
   const keys = ['competitor', 'customer', 'casestudy'];
+  const insightKeys = ['competitor_insight', 'customer_insight', 'casestudy_insight'];
   keys.forEach((key, i) => {
     const items = data[key] || [];
     const s = SECTIONS[i];
@@ -120,6 +140,14 @@ function render(data) {
     document.getElementById('list' + s.id).innerHTML = items.length
       ? items.map(item => card(item, s)).join('')
       : '<div class="empty">本日は該当情報がありません</div>';
+    const insight = data[insightKeys[i]];
+    const insightBox = document.getElementById('insight' + s.id);
+    if (insight) {
+      document.getElementById('insight' + s.id + '-text').textContent = insight;
+      insightBox.style.display = 'flex';
+    } else {
+      insightBox.style.display = 'none';
+    }
   });
 }
 
