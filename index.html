@@ -65,6 +65,9 @@
     .ib3 .insight-label { color: #533483; }
     .insight-text { font-size: 13px; color: #444; line-height: 1.7; }
 
+    .trend-banner { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; padding: 12px 32px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+    .trend-banner strong { color: #f5a623; margin-right: 4px; }
+
     footer { text-align: center; padding: 24px; font-size: 12px; color: #bbb; }
   </style>
 </head>
@@ -76,6 +79,9 @@
   </div>
   <span class="badge">毎朝 8:00 自動更新</span>
 </header>
+<div class="trend-banner" id="trend-banner" style="display:none">
+  <span>📈</span><span id="trend-text"></span>
+</div>
 
 <div class="container">
   <div class="summary-grid">
@@ -147,6 +153,13 @@ function card(item, s) {
 
 function render(data) {
   document.getElementById('updated-at').textContent = '最終更新: ' + data.updated_at;
+  const trendBanner = document.getElementById('trend-banner');
+  if (data.trend_summary) {
+    document.getElementById('trend-text').innerHTML = '<strong>今週のトレンド：</strong>' + data.trend_summary;
+    trendBanner.style.display = 'flex';
+  } else {
+    trendBanner.style.display = 'none';
+  }
   const keys = ['competitor', 'customer', 'casestudy'];
   const insightKeys = ['competitor_insight', 'customer_insight', 'casestudy_insight'];
   const keywordKeys = ['competitor_keywords', 'customer_keywords', 'casestudy_keywords'];
