@@ -3,17 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIペルソナ 動向ウォッチ</title>
+  <title>DNP ペルソナインサイト 営業支援ダッシュボード</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
 
     header {
-      background: var(--header-bg, linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%));
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
       color: white; padding: 24px 32px;
       display: grid; grid-template-columns: minmax(180px, auto) 1fr minmax(160px, auto);
-      align-items: center; gap: 20px;
-      transition: background 0.5s;
+      align-items: center; gap: 20px; transition: background 0.5s;
     }
     .header-left { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .header-title-row { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
@@ -33,65 +32,127 @@
     .weather-temp { font-size: 22px; font-weight: 800; line-height: 1; }
     .weather-desc { font-size: 11px; opacity: 0.8; margin-top: 2px; }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
-
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
-    .summary-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-left: 4px solid; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
-    .summary-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
-    .summary-card.c1 { border-color: #e94560; }
-    .summary-card.c2 { border-color: #0f3460; }
-    .summary-card.c3 { border-color: #533483; }
-    .summary-card.c4 { border-color: #1a7a4a; }
-    .count { font-size: 36px; font-weight: 700; }
-    .c1 .count { color: #e94560; }
-    .c2 .count { color: #0f3460; }
-    .c3 .count { color: #533483; }
-    .c4 .count { color: #1a7a4a; }
-    .clabel { font-size: 13px; color: #888; margin-top: 2px; }
-
-    .section { margin-bottom: 28px; }
-    .sec-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .sec-header h2 { font-size: 16px; font-weight: 700; }
-    .stag { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; color: white; }
-    .stag.t1 { background: #e94560; }
-    .stag.t2 { background: #0f3460; }
-    .stag.t3 { background: #533483; }
-    .stag.t4 { background: #1a7a4a; }
-
-    .news-list { display: flex; flex-direction: column; gap: 12px; }
-    .news-card { background: white; border-radius: 10px; padding: 16px 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display: flex; gap: 16px; align-items: flex-start; }
-    .icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .i1 { background: #fff0f3; }
-    .i2 { background: #eef2ff; }
-    .i3 { background: #f5f0ff; }
-    .i4 { background: #edfaf3; }
-    .nbody { flex: 1; }
-    .ntitle { font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 4px; }
-    .ndesc  { font-size: 12px; color: #666; line-height: 1.6; }
-    .nfoot  { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-    .nsrc   { font-size: 11px; color: #aaa; }
-    .pill   { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
-    .p1 { background: #fff0f3; color: #e94560; }
-    .p2 { background: #eef2ff; color: #0f3460; }
-    .p3 { background: #f5f0ff; color: #533483; }
-    .p4 { background: #edfaf3; color: #1a7a4a; }
-    .empty { color: #bbb; font-size: 13px; padding: 16px; }
-
-    .insight-box { border-radius: 10px; padding: 16px 20px; margin-top: 14px; display: flex; gap: 12px; align-items: flex-start; }
-    .insight-box.ib1 { background: #fff8f0; border-left: 4px solid #e94560; }
-    .insight-box.ib2 { background: #f0f4ff; border-left: 4px solid #0f3460; }
-    .insight-box.ib3 { background: #f8f0ff; border-left: 4px solid #533483; }
-    .insight-box.ib4 { background: #f0faf4; border-left: 4px solid #1a7a4a; }
-    .insight-label { font-size: 11px; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.05em; }
-    .ib1 .insight-label { color: #e94560; }
-    .ib2 .insight-label { color: #0f3460; }
-    .ib3 .insight-label { color: #533483; }
-    .ib4 .insight-label { color: #1a7a4a; }
-    .insight-text { font-size: 13px; color: #444; line-height: 1.7; }
-
     .trend-banner { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; padding: 12px 32px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
     .trend-banner strong { color: #f5a623; margin-right: 4px; }
 
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+    /* Summary cards */
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .summary-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-left: 4px solid; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+    .summary-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+    .sc-top5 { border-color: #e94560; }
+    .sc-kw   { border-color: #f5a623; }
+    .sc-comp { border-color: #0f3460; }
+    .sc-prop { border-color: #1a7a4a; }
+    .sc-count { font-size: 36px; font-weight: 700; }
+    .sc-top5 .sc-count { color: #e94560; }
+    .sc-kw   .sc-count { color: #f5a623; }
+    .sc-comp .sc-count { color: #0f3460; }
+    .sc-prop .sc-count { color: #1a7a4a; }
+    .sc-label { font-size: 13px; color: #888; margin-top: 2px; }
+    .sc-sub   { font-size: 11px; margin-top: 6px; opacity: 0.7; line-height: 1.5; }
+
+    /* Section headers */
+    .section { margin-bottom: 36px; }
+    .sec-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .sec-header h2 { font-size: 17px; font-weight: 700; }
+    .stag { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; color: white; }
+    .t-top5 { background: #e94560; }
+    .t-kw   { background: #f5a623; }
+    .t-comp { background: #0f3460; }
+    .t-pain { background: #533483; }
+    .t-prop { background: #1a7a4a; }
+    .t-act  { background: #2d7d9a; }
+
+    /* TOP5 cards */
+    .top5-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 16px; border-left: 4px solid #e94560; }
+    .top5-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+    .rank-badge { width: 36px; height: 36px; border-radius: 50%; background: #e94560; color: white; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .rank-badge.r1 { background: #e94560; }
+    .rank-badge.r2 { background: #e8693a; }
+    .rank-badge.r3 { background: #e8903a; }
+    .rank-badge.r4 { background: #aaa; }
+    .rank-badge.r5 { background: #bbb; }
+    .top5-title { font-size: 15px; font-weight: 700; line-height: 1.5; flex: 1; }
+    .top5-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .top5-source { font-size: 11px; color: #aaa; }
+    .top5-sections { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .top5-section { padding: 12px 14px; border-radius: 8px; }
+    .ts-overview    { background: #f8f9fa; }
+    .ts-why         { background: #fff8f0; }
+    .ts-insight     { background: #f0faf4; }
+    .ts-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; margin-bottom: 6px; text-transform: uppercase; }
+    .ts-overview .ts-label  { color: #666; }
+    .ts-why     .ts-label   { color: #e8903a; }
+    .ts-insight .ts-label   { color: #1a7a4a; }
+    .ts-text { font-size: 12px; color: #444; line-height: 1.7; }
+    .pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .pill-red    { background: #fff0f3; color: #e94560; }
+    .pill-orange { background: #fff5e6; color: #e8693a; }
+    .stars { font-size: 12px; margin-left: 4px; vertical-align: middle; }
+
+    /* Keywords */
+    .kw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+    .kw-card { background: white; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); border-left: 3px solid #f5a623; }
+    .kw-word { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #1a1a2e; }
+    .kw-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+    .kw-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .vol-high { background: #fff0f3; color: #e94560; }
+    .vol-mid  { background: #fff5e6; color: #e8903a; }
+    .vol-low  { background: #f0f4ff; color: #0f3460; }
+    .comp-strong { background: #ffe0e0; color: #c0392b; }
+    .comp-mid    { background: #fff5e6; color: #d35400; }
+    .comp-weak   { background: #e8f5e9; color: #27ae60; }
+    .kw-usage { font-size: 11px; color: #888; }
+
+    /* Competitor moves */
+    .comp-card { background: white; border-radius: 10px; padding: 18px 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 12px; border-left: 4px solid #0f3460; }
+    .comp-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .comp-name { font-size: 14px; font-weight: 700; flex: 1; }
+    .threat-badge { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 700; }
+    .threat-high { background: #ffe0e0; color: #c0392b; }
+    .threat-mid  { background: #fff5e6; color: #d35400; }
+    .threat-low  { background: #e8f5e9; color: #27ae60; }
+    .comp-content { font-size: 13px; color: #444; line-height: 1.7; margin-bottom: 10px; }
+    .comp-ref { font-size: 12px; color: #2d7d9a; line-height: 1.6; padding: 8px 12px; background: #f0f8fb; border-radius: 6px; }
+    .comp-ref::before { content: '💡 '; }
+    .comp-link { font-size: 11px; color: #aaa; margin-top: 8px; display: block; }
+
+    /* Pain points */
+    .pain-card { background: white; border-radius: 10px; padding: 18px 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 12px; border-left: 4px solid #533483; }
+    .pain-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .pain-target { font-size: 11px; color: white; background: #533483; display: inline-block; padding: 2px 10px; border-radius: 20px; font-weight: 600; margin-bottom: 12px; }
+    .pain-sections { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .pain-section { padding: 10px 12px; border-radius: 8px; }
+    .ps-pain       { background: #fdf0ff; }
+    .ps-background { background: #f5f5f5; }
+    .ps-proposal   { background: #f0faf4; }
+    .ps-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 5px; }
+    .ps-pain       .ps-label { color: #533483; }
+    .ps-background .ps-label { color: #666; }
+    .ps-proposal   .ps-label { color: #1a7a4a; }
+    .ps-text { font-size: 12px; color: #444; line-height: 1.7; }
+
+    /* Proposals */
+    .prop-card { background: white; border-radius: 10px; padding: 20px 24px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 12px; border-left: 4px solid #1a7a4a; }
+    .prop-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: #1a2e1a; }
+    .prop-industry { font-size: 11px; color: white; background: #1a7a4a; display: inline-block; padding: 2px 10px; border-radius: 20px; font-weight: 600; margin-bottom: 14px; }
+    .prop-approach { font-size: 13px; color: #444; line-height: 1.7; margin-bottom: 12px; }
+    .prop-q { font-size: 12px; color: #0f3460; background: #f0f4ff; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; line-height: 1.6; }
+    .prop-q::before { content: '❓ '; }
+    .prop-tagline { font-size: 13px; font-style: italic; color: #1a7a4a; background: #f0faf4; padding: 10px 14px; border-radius: 6px; border-left: 3px solid #1a7a4a; line-height: 1.6; }
+
+    /* Actions */
+    .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .action-card { background: white; border-radius: 10px; padding: 18px 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+    .action-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 10px; padding: 4px 0; border-bottom: 2px solid; }
+    .al-check    { color: #e94560; border-color: #e94560; }
+    .al-share    { color: #0f3460; border-color: #0f3460; }
+    .al-material { color: #533483; border-color: #533483; }
+    .action-text { font-size: 13px; color: #444; line-height: 1.8; }
+
+    .empty { color: #bbb; font-size: 13px; padding: 20px; }
 
     footer { text-align: center; padding: 24px; font-size: 12px; color: #bbb; }
 
@@ -103,19 +164,13 @@
       .header-quote-bubble { font-size: 12px; flex: 1; }
       .header-quote-robot { font-size: 30px; }
       .header-right { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; order: 2; }
-      .weather-temp { font-size: 18px; }
-      .weather-icon { font-size: 22px; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .top5-sections { grid-template-columns: 1fr; }
+      .pain-sections { grid-template-columns: 1fr; }
+      .actions-grid { grid-template-columns: 1fr; }
+      .kw-grid { grid-template-columns: 1fr; }
       .container { padding: 16px 12px; }
-      .summary-grid { grid-template-columns: 1fr; gap: 10px; }
-      .count { font-size: 28px; }
-      .news-card { padding: 12px 14px; gap: 10px; }
-      .icon { width: 32px; height: 32px; font-size: 16px; }
-      .ntitle { font-size: 13px; }
-      .ndesc { font-size: 11px; }
-      .nfoot { flex-wrap: wrap; gap: 6px; }
       .trend-banner { padding: 10px 16px; font-size: 12px; }
-      .insight-box { padding: 12px 14px; }
-      .insight-text { font-size: 12px; }
     }
   </style>
 </head>
@@ -124,7 +179,7 @@
   <div class="header-left">
     <div class="header-title-row">
       <span id="season-icon" style="font-size:28px;">🤖</span>
-      <h1>AIペルソナ 動向ウォッチ</h1>
+      <h1>ペルソナインサイト 営業支援ダッシュボード</h1>
     </div>
     <div class="header-date" id="header-date"></div>
     <div class="header-day" id="header-day"></div>
@@ -151,45 +206,62 @@
 
 <div class="container">
   <div class="summary-grid">
-    <div class="summary-card c1" onclick="document.getElementById('section1').scrollIntoView({behavior:'smooth'})"><div class="count" id="cnt1">-</div><div class="clabel">📢 競合動向（AIペルソナ関連全域）</div><div id="keywords1" style="margin-top:8px;font-size:12px;color:#e94560;line-height:1.8;"></div><span id="new1" style="display:none;font-size:11px;font-weight:700;color:white;background:#e94560;padding:2px 10px;border-radius:20px;margin-top:4px;"></span></div>
-    <div class="summary-card c2" onclick="document.getElementById('section2').scrollIntoView({behavior:'smooth'})"><div class="count" id="cnt2">-</div><div class="clabel">🏢 潜在顧客動向（ブランド企業動向）</div><div id="keywords2" style="margin-top:8px;font-size:12px;color:#0f3460;line-height:1.8;"></div><span id="new2" style="display:none;font-size:11px;font-weight:700;color:white;background:#0f3460;padding:2px 10px;border-radius:20px;margin-top:4px;"></span></div>
-    <div class="summary-card c3" onclick="document.getElementById('section3').scrollIntoView({behavior:'smooth'})"><div class="count" id="cnt3">-</div><div class="clabel">📋 導入事例・プレスリリース</div><div id="keywords3" style="margin-top:8px;font-size:12px;color:#533483;line-height:1.8;"></div><span id="new3" style="display:none;font-size:11px;font-weight:700;color:white;background:#533483;padding:2px 10px;border-radius:20px;margin-top:4px;"></span></div>
-    <div class="summary-card c4" onclick="document.getElementById('section4').scrollIntoView({behavior:'smooth'})"><div class="count" id="cnt4">-</div><div class="clabel">🛍️ 消費財・ブランド企業動向</div><div id="keywords4" style="margin-top:8px;font-size:12px;color:#1a7a4a;line-height:1.8;"></div><span id="new4" style="display:none;font-size:11px;font-weight:700;color:white;background:#1a7a4a;padding:2px 10px;border-radius:20px;margin-top:4px;"></span></div>
+    <div class="summary-card sc-top5" onclick="document.getElementById('sec-top5').scrollIntoView({behavior:'smooth'})">
+      <div class="sc-count" id="cnt-top5">-</div>
+      <div class="sc-label">🏆 注目トピック</div>
+      <div class="sc-sub" id="sub-top5"></div>
+    </div>
+    <div class="summary-card sc-kw" onclick="document.getElementById('sec-kw').scrollIntoView({behavior:'smooth'})">
+      <div class="sc-count" id="cnt-kw">-</div>
+      <div class="sc-label">🔍 注目キーワード</div>
+      <div class="sc-sub" id="sub-kw"></div>
+    </div>
+    <div class="summary-card sc-comp" onclick="document.getElementById('sec-comp').scrollIntoView({behavior:'smooth'})">
+      <div class="sc-count" id="cnt-comp">-</div>
+      <div class="sc-label">⚔️ 競合の動き</div>
+      <div class="sc-sub" id="sub-comp"></div>
+    </div>
+    <div class="summary-card sc-prop" onclick="document.getElementById('sec-prop').scrollIntoView({behavior:'smooth'})">
+      <div class="sc-count" id="cnt-prop">-</div>
+      <div class="sc-label">📋 提案ネタ</div>
+      <div class="sc-sub" id="sub-prop"></div>
+    </div>
   </div>
 
-  <div class="section" id="section1">
-    <div class="sec-header"><h2>📢 競合動向</h2><span class="stag t1">AIペルソナ関連全域</span></div>
-    <div class="news-list" id="list1"></div>
-    <div class="insight-box ib1" id="insight1" style="display:none">
-      <div style="flex:1"><div class="insight-label">📌 ペルソナインサイトへの示唆</div><div class="insight-text" id="insight1-text"></div></div>
-    </div>
+  <div class="section" id="sec-top5">
+    <div class="sec-header"><h2>🏆 本日の注目トピック TOP5</h2><span class="stag t-top5">直近10日以内</span></div>
+    <div id="list-top5"><div class="empty">データを読み込み中...</div></div>
   </div>
-  <div class="section" id="section2">
-    <div class="sec-header"><h2>🏢 潜在顧客動向</h2><span class="stag t2">全業界 DX・マーケ・顧客体験</span></div>
-    <div class="news-list" id="list2"></div>
-    <div class="insight-box ib2" id="insight2" style="display:none">
-      <div style="flex:1"><div class="insight-label">📌 ペルソナインサイトへの示唆</div><div class="insight-text" id="insight2-text"></div></div>
-    </div>
+
+  <div class="section" id="sec-kw">
+    <div class="sec-header"><h2>🔍 新しく拾うべきキーワード</h2><span class="stag t-kw">提案・SEO活用</span></div>
+    <div class="kw-grid" id="list-kw"></div>
   </div>
-  <div class="section" id="section3">
-    <div class="sec-header"><h2>📋 導入事例・プレスリリース</h2><span class="stag t3">AIペルソナ関連</span></div>
-    <div class="news-list" id="list3"></div>
-    <div class="insight-box ib3" id="insight3" style="display:none">
-      <div style="flex:1"><div class="insight-label">📌 ペルソナインサイトへの示唆</div><div class="insight-text" id="insight3-text"></div></div>
-    </div>
+
+  <div class="section" id="sec-comp">
+    <div class="sec-header"><h2>⚔️ 競合・類似サービスの動き</h2><span class="stag t-comp">電通・博報堂・リサーチ会社</span></div>
+    <div id="list-comp"></div>
   </div>
-  <div class="section" id="section4">
-    <div class="sec-header"><h2>🛍️ 消費財・ブランド企業動向</h2><span class="stag t4">商談ネタ・キャンペーン・新施策</span></div>
-    <div class="news-list" id="list4"></div>
-    <div class="insight-box ib4" id="insight4" style="display:none">
-      <div style="flex:1"><div class="insight-label">💡 商談ネタ・提案切り口</div><div class="insight-text" id="insight4-text"></div></div>
-    </div>
+
+  <div class="section" id="sec-pain">
+    <div class="sec-header"><h2>💡 顧客課題として使えそうな論点</h2><span class="stag t-pain">消費財・飲料・日用品メーカー</span></div>
+    <div id="list-pain"></div>
+  </div>
+
+  <div class="section" id="sec-prop">
+    <div class="sec-header"><h2>📋 営業・企画に使える提案ネタ</h2><span class="stag t-prop">商談に直結</span></div>
+    <div id="list-prop"></div>
+  </div>
+
+  <div class="section" id="sec-actions">
+    <div class="sec-header"><h2>✅ 今日のアクション</h2><span class="stag t-act">すぐ動ける3つ</span></div>
+    <div class="actions-grid" id="list-actions"></div>
   </div>
 </div>
-<footer>AIペルソナ 動向ウォッチ — 毎朝 08:00 JST 自動更新</footer>
+
+<footer>DNP ペルソナインサイト 営業支援ダッシュボード — 毎朝 08:00 JST 自動更新</footer>
 
 <script>
-// 月ごとのテーマ
 const MONTH_THEMES = {
   1:  { icon: '⛄', bg: 'linear-gradient(135deg, #1a1a2e 0%, #2d4a7a 60%, #4a90d9 100%)', label: '睦月' },
   2:  { icon: '🌸', bg: 'linear-gradient(135deg, #2d1b3d 0%, #7b3f6e 60%, #e88fb0 100%)', label: '如月' },
@@ -204,153 +276,292 @@ const MONTH_THEMES = {
   11: { icon: '🍄', bg: 'linear-gradient(135deg, #1a1a1a 0%, #4a3520 60%, #8b6b40 100%)', label: '霜月' },
   12: { icon: '❄️', bg: 'linear-gradient(135deg, #0d1b2d 0%, #1e3a5f 60%, #4a7fb5 100%)', label: '師走' },
 };
-
 const WEATHER_CODES = {
-  0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
-  45:'🌫️', 48:'🌫️',
-  51:'🌦️', 53:'🌦️', 55:'🌧️',
-  61:'🌧️', 63:'🌧️', 65:'🌧️',
-  71:'🌨️', 73:'🌨️', 75:'❄️',
-  80:'🌦️', 81:'🌧️', 82:'⛈️',
-  95:'⛈️', 96:'⛈️', 99:'⛈️'
+  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
+  51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',
+  71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'
 };
 
-// ヘッダーの季節テーマ＆日付を設定
 function setupHeader() {
   const now = new Date();
-  const month = now.getMonth() + 1;
-  const theme = MONTH_THEMES[month];
-  document.getElementById('main-header').style.background = theme.bg;
-  document.getElementById('season-icon').innerHTML = theme.icon;
-  const days = ['日', '月', '火', '水', '木', '金', '土'];
-  document.getElementById('header-date').textContent =
-    `${now.getFullYear()}年${month}月${now.getDate()}日`;
-  document.getElementById('header-day').textContent =
-    `${days[now.getDay()]}曜日　${theme.label}`;
+  const m = now.getMonth() + 1;
+  const t = MONTH_THEMES[m];
+  document.getElementById('main-header').style.background = t.bg;
+  document.getElementById('season-icon').innerHTML = t.icon;
+  const days = ['日','月','火','水','木','金','土'];
+  document.getElementById('header-date').textContent = `${now.getFullYear()}年${m}月${now.getDate()}日`;
+  document.getElementById('header-day').textContent = `${days[now.getDay()]}曜日　${t.label}`;
 }
 
-// 東京の天気をOpen-Meteoから取得（APIキー不要）
 async function loadWeather() {
   try {
-    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.6762&longitude=139.6503&current=temperature_2m,weathercode&timezone=Asia/Tokyo');
-    const data = await res.json();
-    const temp = Math.round(data.current.temperature_2m);
-    const code = data.current.weathercode;
-    const icon = WEATHER_CODES[code] || '🌡️';
-    document.getElementById('weather-icon').textContent = icon;
-    document.getElementById('weather-temp').textContent = temp + '°C';
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.6762&longitude=139.6503&current=temperature_2m,weathercode&timezone=Asia/Tokyo');
+    const d = await r.json();
+    document.getElementById('weather-icon').textContent = WEATHER_CODES[d.current.weathercode] || '🌡️';
+    document.getElementById('weather-temp').textContent = Math.round(d.current.temperature_2m) + '°C';
     document.getElementById('weather-desc').textContent = '東京　現在';
     document.getElementById('weather-box').style.display = 'flex';
-  } catch(e) { /* 取得失敗時は非表示のまま */ }
-}
-
-setupHeader();
-loadWeather();
-
-const SECTIONS = [
-  { id: '1', icon: '📢', iconCls: 'i1', pillCls: 'p1' },
-  { id: '2', icon: '🏢', iconCls: 'i2', pillCls: 'p2' },
-  { id: '3', icon: '📋', iconCls: 'i3', pillCls: 'p3' },
-  { id: '4', icon: '📊', iconCls: 'i4', pillCls: 'p4' }
-];
-
-function isNew(dateStr) {
-  const d = new Date(dateStr.replace(/\//g, '-'));
-  const diff = (new Date() - d) / (1000 * 60 * 60 * 24);
-  return diff <= 3;
+  } catch(e) {}
 }
 
 function stars(score) {
   if (!score) return '';
-  const filled = '★'.repeat(score);
-  const empty = '☆'.repeat(3 - score);
-  const color = score === 3 ? '#e94560' : score === 2 ? '#f5a623' : '#aaa';
-  return `<span style="color:${color};font-size:13px;margin-left:6px;vertical-align:middle;">${filled}${empty}</span>`;
+  const c = score === 3 ? '#e94560' : score === 2 ? '#f5a623' : '#ccc';
+  return `<span class="stars" style="color:${c}">${'★'.repeat(score)}${'☆'.repeat(3-score)}</span>`;
 }
 
-function card(item, s) {
-  const newBadge = isNew(item.date) ? '<span style="background:#e94560;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:8px;vertical-align:middle;">NEW</span>' : '';
-  const highlight = item.score === 3 ? 'border-left:3px solid #e94560;' : '';
-  return `<div class="news-card" style="${highlight}">
-    <div class="icon ${s.iconCls}">${s.icon}</div>
-    <div class="nbody">
-      <div class="ntitle">${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid #ccc;">${item.title}</a>` : item.title}${stars(item.score)}${newBadge}</div>
-      <div class="ndesc">${item.summary}</div>
-      <div class="nfoot">
-        <span class="nsrc">${item.source} ／ ${item.date}</span>
-        <span class="pill ${s.pillCls}">${item.tag}</span>
-      </div>
-    </div>
-  </div>`;
+function volClass(v) {
+  if (v === '高') return 'vol-high';
+  if (v === '中') return 'vol-mid';
+  return 'vol-low';
+}
+function compClass(c) {
+  if (c === '強') return 'comp-strong';
+  if (c === '中') return 'comp-mid';
+  return 'comp-weak';
+}
+function threatClass(t) {
+  if (t === '高') return 'threat-high';
+  if (t === '中') return 'threat-mid';
+  return 'threat-low';
 }
 
 function render(data) {
-  document.getElementById('updated-at').textContent = '最終更新: ' + data.updated_at;
-  const quoteRow = document.getElementById('header-quote-row');
+  document.getElementById('updated-at').textContent = '最終更新: ' + (data.updated_at || '');
   if (data.quote) {
     document.getElementById('quote-text').textContent = '「' + data.quote + '」';
-    quoteRow.style.visibility = 'visible';
+    document.getElementById('header-quote-row').style.visibility = 'visible';
   }
-  const trendBanner = document.getElementById('trend-banner');
   if (data.trend_summary) {
     document.getElementById('trend-text').innerHTML = '<strong>今週のトレンド：</strong>' + data.trend_summary;
-    trendBanner.style.display = 'flex';
-  } else {
-    trendBanner.style.display = 'none';
+    document.getElementById('trend-banner').style.display = 'flex';
   }
-  const keys = ['competitor', 'customer', 'casestudy', 'ir'];
-  const insightKeys = ['competitor_insight', 'customer_insight', 'casestudy_insight', 'ir_insight'];
-  const keywordKeys = ['competitor_keywords', 'customer_keywords', 'casestudy_keywords', 'ir_keywords'];
-  keys.forEach((key, i) => {
-    const items = data[key] || [];
-    const s = SECTIONS[i];
-    const newCount = items.filter(item => isNew(item.date)).length;
-    document.getElementById('cnt' + s.id).textContent = items.length;
-    const keywords = data[keywordKeys[i]] || [];
-    document.getElementById('keywords' + s.id).textContent = keywords.map(k => '#' + k).join('　');
-    const newEl = document.getElementById('new' + s.id);
-    if (newCount > 0) {
-      newEl.textContent = 'うち NEW ' + newCount + '件';
-      newEl.style.display = 'inline';
-    } else {
-      newEl.style.display = 'none';
-    }
-    document.getElementById('list' + s.id).innerHTML = items.length
-      ? items.map(item => card(item, s)).join('')
-      : '<div class="empty">本日は該当情報がありません</div>';
-    const insight = data[insightKeys[i]];
-    const insightBox = document.getElementById('insight' + s.id);
-    if (insight) {
-      document.getElementById('insight' + s.id + '-text').textContent = insight;
-      insightBox.style.display = 'flex';
-    } else {
-      insightBox.style.display = 'none';
-    }
-  });
+
+  // TOP5
+  const top5 = data.top5 || [];
+  document.getElementById('cnt-top5').textContent = top5.length;
+  document.getElementById('sub-top5').textContent = top5.filter(t => t.score === 3).length + '件 スコア★★★';
+  const rankCls = ['r1','r2','r3','r4','r5'];
+  document.getElementById('list-top5').innerHTML = top5.length
+    ? top5.map((t,i) => `
+      <div class="top5-card">
+        <div class="top5-header">
+          <div class="rank-badge ${rankCls[i]}">${t.rank || i+1}</div>
+          <div style="flex:1">
+            <div class="top5-title">${t.url ? `<a href="${t.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid #ddd;">${t.title}</a>` : t.title}${stars(t.score)}</div>
+            <div class="top5-meta">
+              <span class="top5-source">${t.source} ／ ${t.date}</span>
+              <span class="pill pill-red">${t.tag || ''}</span>
+            </div>
+          </div>
+        </div>
+        <div class="top5-sections">
+          <div class="top5-section ts-overview"><div class="ts-label">概要（事実）</div><div class="ts-text">${t.overview || ''}</div></div>
+          <div class="top5-section ts-why"><div class="ts-label">なぜ重要か</div><div class="ts-text">${t.why_important || ''}</div></div>
+          <div class="top5-section ts-insight"><div class="ts-label">DNPペルソナインサイトへの示唆</div><div class="ts-text">${t.dnp_insight || ''}</div></div>
+        </div>
+      </div>`).join('')
+    : '<div class="empty">本日は該当情報がありません</div>';
+
+  // Keywords
+  const kws = data.keywords || [];
+  document.getElementById('cnt-kw').textContent = kws.length;
+  document.getElementById('sub-kw').textContent = kws.slice(0,3).map(k=>k.word).join('、');
+  document.getElementById('list-kw').innerHTML = kws.length
+    ? kws.map(k => `
+      <div class="kw-card">
+        <div class="kw-word">${k.word}</div>
+        <div class="kw-badges">
+          <span class="kw-badge ${volClass(k.volume)}">検索量：${k.volume}</span>
+          <span class="kw-badge ${compClass(k.competition)}">競合：${k.competition}</span>
+        </div>
+        <div class="kw-usage">活用：${k.usage}</div>
+      </div>`).join('')
+    : '<div class="empty">情報がありません</div>';
+
+  // Competitors
+  const comps = data.competitor_moves || [];
+  document.getElementById('cnt-comp').textContent = comps.length;
+  document.getElementById('sub-comp').textContent = comps.map(c=>c.company).join('、');
+  document.getElementById('list-comp').innerHTML = comps.length
+    ? comps.map(c => `
+      <div class="comp-card">
+        <div class="comp-header">
+          <div class="comp-name">${c.company}</div>
+          <span class="threat-badge ${threatClass(c.threat_level)}">脅威度：${c.threat_level}</span>
+        </div>
+        <div class="comp-content">${c.content}</div>
+        <div class="comp-ref">${c.reference}</div>
+        ${c.url ? `<a class="comp-link" href="${c.url}" target="_blank" rel="noopener">${c.url}</a>` : ''}
+      </div>`).join('')
+    : '<div class="empty">情報がありません</div>';
+
+  // Pain points
+  const pains = data.customer_pain_points || [];
+  document.getElementById('list-pain').innerHTML = pains.length
+    ? pains.map(p => `
+      <div class="pain-card">
+        <div class="pain-title">${p.title}</div>
+        <div class="pain-target">${p.target}</div>
+        <div class="pain-sections">
+          <div class="pain-section ps-pain"><div class="ps-label">課題</div><div class="ps-text">${p.pain}</div></div>
+          <div class="pain-section ps-background"><div class="ps-label">背景</div><div class="ps-text">${p.background}</div></div>
+          <div class="pain-section ps-proposal"><div class="ps-label">DNPが提案できること</div><div class="ps-text">${p.proposal}</div></div>
+        </div>
+      </div>`).join('')
+    : '<div class="empty">情報がありません</div>';
+
+  // Proposals
+  const props = data.proposals || [];
+  document.getElementById('cnt-prop').textContent = props.length;
+  document.getElementById('sub-prop').textContent = props.map(p=>p.industry).join('、');
+  document.getElementById('list-prop').innerHTML = props.length
+    ? props.map(p => `
+      <div class="prop-card">
+        <div class="prop-title">${p.title}</div>
+        <div class="prop-industry">${p.industry}</div>
+        <div class="prop-approach">${p.approach}</div>
+        <div class="prop-q">${p.question}</div>
+        <div class="prop-tagline">${p.tagline}</div>
+      </div>`).join('')
+    : '<div class="empty">情報がありません</div>';
+
+  // Actions
+  const actions = data.actions || {};
+  document.getElementById('list-actions').innerHTML = `
+    <div class="action-card">
+      <div class="action-label al-check">🔎 すぐ確認すべきこと</div>
+      <div class="action-text">${actions.check_now || '情報がありません'}</div>
+    </div>
+    <div class="action-card">
+      <div class="action-label al-share">📢 社内で共有すべきこと</div>
+      <div class="action-text">${actions.share_internally || '情報がありません'}</div>
+    </div>
+    <div class="action-card">
+      <div class="action-label al-material">📝 提案書・資料に反映できること</div>
+      <div class="action-text">${actions.for_materials || '情報がありません'}</div>
+    </div>`;
 }
 
 const SAMPLE = {
-  updated_at: "2026/06/11 08:00（サンプルデータ）",
-  competitor: [
-    { title: "電通、生成AI活用のデジタルヒューマン広告サービスを発表", summary: "電通グループは生成AIを活用した仮想インフルエンサー制作・運用サービスを国内主要ブランド向けに提供開始。広告効果の計測機能も統合。", source: "日経クロストレンド", date: "2026/06/11", tag: "新サービス" },
-    { title: "博報堂DYホールディングス、AIペルソナ技術スタートアップに出資", summary: "博報堂DYHDは感情表現型AIアバター技術を持つスタートアップへの戦略投資を発表。顧客コミュニケーション領域での活用を検討。", source: "AdverTimes", date: "2026/06/10", tag: "投資・M&A" }
+  updated_at: "2026/06/16 08:00（サンプルデータ）",
+  quote: "私は1秒で100の仮説を立てられる。でも『なんとなく好き』だけは、まだ解析できていない。",
+  trend_summary: "リテールメディアの統合がメガプラットフォーム化で急加速。AIリサーチによる「シンセティック・リサーチ（合成リサーチ）」が標準ワークフローとして定着しつつある。",
+  top5: [
+    {
+      rank:1, score:3,
+      title: "セブン‐イレブン・電通・サイバーエージェント、リテールメディア合弁会社「セブン‐イレブン・アドコネクト」設立で合意",
+      overview: "2026年6月11日、3社は国内最大級の店舗網（約22,000店舗）とアプリ会員（約2,800万人）の購買データを活かした新会社を設立すると発表。AIで時間帯・天候・在庫に応じたリアルタイム広告配信を行う。",
+      why_important: "リテールメディアのデータ統合がメガプラットフォーム化によって急速に進む、2026年を象徴する動きです。電通がプラットフォーム側に入り込むことで、従来の代理店ビジネスの境界が変化する可能性があります。",
+      dnp_insight: "購買履歴データ（定量）だけでは「なぜ買ったのか」という消費者の心理（インサイト）まで追いきれません。DNPの生活者ペルソナデータをリテールメディアのターゲティングや効果検証に掛け合わせる「データ連携型の共同提案」という事業機会が生まれています。",
+      url: "", source: "ExchangeWire", date: "2026/06/11", tag: "リテールメディア"
+    },
+    {
+      rank:2, score:3,
+      title: "Mindsが「シンセティック・リサーチ（合成リサーチ）：2026年完全ガイド」を公開",
+      overview: "AIペルソナやシリコンサンプリング（合成データ）を活用し、数週間かかる調査を数分で完了させる手法の解説ガイドが公開。まずAIで何十通りもの仮説検証を高速で行い、絞り込んでからリアル調査を行う「2ステップ・リサーチ」を推奨。",
+      why_important: "リサーチの「スピード」と「厳格さ」を両立させる標準ワークフローとして定着しつつあります。汎用AIツールとの差別化ポイントがデータ品質に移っています。",
+      dnp_insight: "他社の汎用AIツールに対し、DNPが持つ豊富な独自の生活者データをベースにした「高精度なAIペルソナ」の優位性をアピールする絶好の機会です。",
+      url: "https://getminds.ai/blog/ja/synthetic-research", source: "Minds", date: "2026/06/10", tag: "AIリサーチ"
+    },
+    {
+      rank:3, score:2,
+      title: "ユニーリサーチが利用企業400社突破、AIインタビューの無料キャンペーンを開始",
+      overview: "最短1日で100人分のデプス調査を完結する「AIインタビュー」や「インタビューガイドAI生成」を提供するセルフ型リサーチサービスが、利用拡大に伴うキャンペーンを発表。",
+      why_important: "マーケターが「手軽に、素早く、安価に」リサーチを回すセルフAIリサーチが一般化している現実を示しています。競合の脅威度は高く、価格競争ではなく品質・精度の差別化が急務です。",
+      dnp_insight: "安価なセルフAIツールが普及するからこそ、DNPは「データの信頼性、3万人規模の精緻なパネル、ハルシネーションのない深いCX改善コンサル力」という上位互換の価値を明確に打ち出して差別化すべきです。",
+      url: "https://prtimes.jp/main/html/rd/p/000000059.000117669.html", source: "PR TIMES", date: "2026/06/10", tag: "競合動向"
+    },
+    {
+      rank:4, score:2,
+      title: "フリークアウト、BtoB広告の企業ターゲティング機能を大幅アップデート",
+      overview: "BtoB企業の広告精度を引き上げるため、企業属性や行動データを活用したターゲティング機能を大幅に刷新したと発表。",
+      why_important: "サードパーティCookie規制の本格化に伴い、BtoBマーケティングにおいても1stパーティデータやアカウントベースのデータ統合の重要性が高まっています。",
+      dnp_insight: "BtoB企業のマーケティングDXを支援する際、ペルソナ設計にとどまらず「統合データに基づく高精度なBtoBターゲティング広告の運用・効果測定」まで一気通貫で提案する価値が高まっています。",
+      url: "https://prtimes.jp/topics/keywords/BtoB%E3%83%9E%E3%83%BC%E3%82%B1%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0", source: "PR TIMES", date: "2026/06/10", tag: "BtoBマーケ"
+    },
+    {
+      rank:5, score:2,
+      title: "CotoELによる「AIペルソナ分析事例：チルドコーヒーの選ばれ方」が発表",
+      overview: "AIペルソナを用いて消費者の利用実態や選択意向を分析する最新事例が公開。商品数や購入チャネルが多様化するチルドコーヒー市場において、消費者の複雑な選択メカニズムをAIペルソナで読み解いた。",
+      why_important: "単なるアンケートのクロス集計ではなく、AIペルソナを使った「状況（コンテクスト）ごとの本音分析」が市場に強く求められている証拠です。",
+      dnp_insight: "飲料・食品・消費財メーカーへの営業において、同様の「シーン別・動的ペルソナ分析」を即効性のある切り口として提案に組み込めます。",
+      url: "https://prtimes.jp/main/html/rd/p/000001785.000007815.html", source: "PR TIMES", date: "2026/06/09", tag: "導入事例"
+    }
   ],
-  customer: [
-    { title: "花王、AIを活用したパーソナライズドマーケティング強化を発表", summary: "花王はEコマース向けにAIレコメンド技術を導入し、顧客一人ひとりに最適な商品提案を行う新マーケティング基盤を構築すると発表。", source: "日経MJ", date: "2026/06/11", tag: "DX施策" },
-    { title: "P&Gジャパン、デジタルチャネル投資を前年比30%増へ", summary: "P&Gジャパンは2026年度のデジタルマーケティング予算を大幅増強。SNS・動画広告とAIコンテンツ生成への投資を重点化する方針。", source: "Marketing Week Japan", date: "2026/06/09", tag: "予算増強" },
-    { title: "資生堂、バーチャルビューティーアドバイザー導入を国内展開", summary: "資生堂はECサイトにAIキャラクターによるスキンケア提案機能を実装。メイクアップシミュレーションとの連携でコンバージョン率向上を狙う。", source: "WWD Japan", date: "2026/06/08", tag: "AI導入" }
+  keywords: [
+    { word: "シンセティック・リサーチ", volume: "低", competition: "弱", usage: "提案・SEO（最先端トレンド提示）" },
+    { word: "シリコンサンプリング", volume: "低", competition: "弱", usage: "調査・提案" },
+    { word: "AIペルソナ分析", volume: "中", competition: "中", usage: "SEO・広告・提案" },
+    { word: "動的ペルソナ生成", volume: "中", competition: "中", usage: "SEO・提案" },
+    { word: "リテールメディア 購買データ統合", volume: "中", competition: "強", usage: "広告・提案" },
+    { word: "クッキーレス BtoBターゲティング", volume: "中", competition: "強", usage: "広告・提案" },
+    { word: "一次情報 希少化", volume: "中", competition: "弱", usage: "提案（生成AI普及による差別化）" },
+    { word: "生活者インサイト 生成AI", volume: "高", competition: "強", usage: "SEO・広告" }
   ],
-  casestudy: [
-    { title: "ユニリーバジャパン×AIスタートアップ、AIブランドアンバサダー実証実験", summary: "ユニリーバジャパンがAIペルソナを活用したSNSブランドアンバサダーの実証実験を開始。6ヶ月間でエンゲージメント率への影響を検証。", source: "ITmedia マーケティング", date: "2026/06/07", tag: "導入事例" },
-    { title: "小売チェーン、AIアバター接客を全店舗展開へ", summary: "大手小売チェーンがAIアバターによる接客システムを全国店舗に導入。顧客満足度向上とスタッフの業務効率化を両立。", source: "流通ニュース", date: "2026/06/06", tag: "導入事例" }
-  ]
+  competitor_moves: [
+    {
+      company: "Minds / シンセティック・リサーチ（getminds.ai）",
+      content: "AIペルソナと合成データを活用し、数分で顧客インサイトを獲得する海外発の最先端リサーチ手法の国内プロモーションを開始。",
+      threat_level: "中",
+      reference: "「まずAIで仮説を100通り試して絞り込み、その後リアル調査をかける」という効率的なハイブリッド型ワークフローの提案ストーリーが参考になります。",
+      url: "https://getminds.ai/blog/ja/synthetic-research"
+    },
+    {
+      company: "株式会社プロダクトフォース / ユニーリサーチ",
+      content: "100人分のデプス調査を最短1日で完結する「AIインタビュー」や、AIによる「インタビューガイド自動生成」をセルフ型で提供。利用企業400社突破。",
+      threat_level: "高",
+      reference: "「インタビュー募集数シミュレーター」などの無料診断機能で顧客の心理的ハードルを下げる工夫が参考になります。競合として価格・スピードで劣位になりやすいため、データ精度の差別化を明確化すべきです。",
+      url: "https://prtimes.jp/main/html/rd/p/000000059.000117669.html"
+    }
+  ],
+  customer_pain_points: [
+    {
+      title: "消費財・飲料・食品メーカーのマーケティング責任者",
+      target: "菓子・飲料・化粧品のブランドマネージャー",
+      pain: "商品数の激増やチャネル多様化により、消費者が「なぜ自社商品を選んだ（選ばなかった）のか」の本当の理由（インサイト）が見えなくなっている。",
+      background: "ネット上の二次情報は生成AIで誰でも手に入るため競合と差別化できず、従来の固定的なペルソナ設計では消費者のシーンごとの動的な変化を捉えきれない。",
+      proposal: "3万人規模の豊富な生活者データとAIペルソナ分析を掛け合わせ、「特定の利用シーンや気分」における動的な生活者インサイトを可視化し、商品開発や販促に直結させるプランを提案できます。"
+    },
+    {
+      title: "BtoB製造業・IT企業のマーケティング・営業部門長",
+      target: "エンタープライズ営業を抱えるBtoB企業の責任者",
+      pain: "MAを導入したものの、リードへの一律のメルマガ配信に留まっており、営業が動くべき「商談化の判断材料」が可視化できていない。",
+      background: "BtoBでは個人ではなく「企業（購買グループ）」で検討が行われるため、個人単位のWeb来訪履歴だけではアプローチのタイミングを逃す。Cookie規制で従来のターゲティング広告の精度も落ちている。",
+      proposal: "BtoB向けペルソナ・カスタマージャーニー設計をベースに複数接点のデータを統合し、組織内の「購買グループ」の動きを可視化。Web来訪企業を「明日の架電リスト」に変えるデータ統合・MA拡張ソリューションを構築できます。"
+    }
+  ],
+  proposals: [
+    {
+      title: "【2026年新基準】AI×リアルデータの2ステップで挑む「シンセティック・リサーチ」導入プラン",
+      industry: "小売・EC、消費財メーカー",
+      approach: "生成AIの普及でネット上にある情報の価値は半減しました。DNPの強固な生活者データをベースにしたAIペルソナで100パターンの仮説を高速検証した上で、狙いを定めたリアル調査を行う「2ステップ・リサーチ」が正解です。",
+      question: "「現在、新商品の仮説検証やペルソナ設計にどれくらいの期間とコストをかけていらっしゃいますか？AIを活用してそれを数日に短縮しつつ、精度を上げたいと思われませんか？」",
+      tagline: "AIペルソナによる超高速仮説検証と、DNP独自のリアルデータを融合。ハルシネーションのない、現実に即した高精度なインサイトを数日で導出します。"
+    },
+    {
+      title: "リテールメディア時代の「生活者インサイト型」販促最適化",
+      industry: "流通・小売、菓子・飲料・日用品メーカー",
+      approach: "購買データと広告の統合が急速に進んでいますが、単にデータを繋ぐだけでは消費者の心は動きません。「なぜその時、そのペルソナが動くのか」というDNP独自の生活者インサイトを広告クリエイティブや配信設計に組み込むことで、リテールメディアのROASを最大化します。",
+      question: "「リテールメディアでの広告出稿や購買データの活用において、ターゲットの購入理由（インサイト）まで踏み込んだ施策はできていますか？」",
+      tagline: "単なる購買履歴の追跡から、行動の「理由」を捉えるマーケティングへ。DNPのペルソナインサイトが、リテールメディアを真の成果へ導きます。"
+    }
+  ],
+  actions: {
+    check_now: "競合・類似ツールの「ユニーリサーチ AIインタビュー」のデモ内容や価格体系、およびMindsの「シンセティック・リサーチ」のレポートをチェックし、DNPのペルソナインサイトとの機能的・データ精度的な差異（優位性）を突いた比較表の骨子を作成する。",
+    share_internally: "「セブン‐イレブン・アドコネクト」設立（6/11発表）のニュースをチームに共有。リテールメディアが「購買データ×AI広告」の方向へ急速に統合される動きを受け、DNPの生活者データやペルソナ設計をリテールメディア領域へ外販・連携できるか、次回の企画会議のアジェンダに設定する。",
+    for_materials: "「生成AIの普及に伴う、ネット上の二次情報のコモディティ化（一次情報の希少化）」という2026年現在のコンテクストを資料の導入文に追加。「DNP独自の3万人規模のリアルな生活者データに基づくAIペルソナだからこそ、ハルシネーションのない高精度なインサイトが導出できる」という差別化文言をスライドに反映する。"
+  }
 };
+
+setupHeader();
+loadWeather();
 
 fetch('data.json?t=' + Date.now())
   .then(r => r.json())
   .then(data => {
-    const total = (data.competitor||[]).length + (data.customer||[]).length + (data.casestudy||[]).length;
-    render(total > 0 ? data : SAMPLE);
+    const hasData = (data.top5 || []).length > 0;
+    render(hasData ? data : SAMPLE);
   })
   .catch(() => render(SAMPLE));
 </script>
